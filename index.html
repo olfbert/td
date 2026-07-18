@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#FFCC00">
+<title>Traust du dich?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
+<style>
+  /* ============================================================
+     TRAUST DU DICH? — Sticker-Kontaktseite
+     Design: Post-Gelb + Tinte + Stempel-Rot
+     ============================================================ */
+  :root {
+    --gelb: #FFCC00;        /* Post-Gelb, Hintergrund */
+    --tinte: #131313;       /* Schwarz, Text & Rahmen */
+    --papier: #FFFDF6;      /* Formular-Karte */
+    --stempel: #E30613;     /* Absenden-Button, Akzent */
+    --grau: #6b6455;        /* Nebentext */
+    --radius: 14px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    background: var(--gelb);
+    color: var(--tinte);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 28px 18px calc(28px + env(safe-area-inset-bottom));
+  }
+  .wrap { width: 100%; max-width: 460px; }
+
+  /* --- Sticker-Headline (das Markenzeichen der Seite) --- */
+  .sticker {
+    background: var(--papier);
+    border: 3px solid var(--tinte);
+    border-radius: 18px;
+    box-shadow: 6px 6px 0 var(--tinte);
+    transform: rotate(-2.5deg);
+    padding: 22px 20px 18px;
+    margin: 10px 4px 34px;
+    text-align: center;
+  }
+  .sticker .eyebrow {
+    font-size: 12px;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: var(--grau);
+    margin-bottom: 6px;
+  }
+  .sticker h1 {
+    font-family: "Anton", Impact, sans-serif;
+    font-weight: 400;
+    font-size: clamp(44px, 13vw, 64px);
+    line-height: .95;
+    letter-spacing: .01em;
+    text-transform: uppercase;
+  }
+  .sticker h1 .frage { color: var(--stempel); }
+  .sticker .sub {
+    margin-top: 12px;
+    font-size: 15px;
+    line-height: 1.45;
+    color: var(--tinte);
+  }
+
+  /* --- Formular-Karte --- */
+  .karte {
+    background: var(--papier);
+    border: 3px solid var(--tinte);
+    border-radius: var(--radius);
+    box-shadow: 6px 6px 0 var(--tinte);
+    padding: 22px 18px;
+  }
+  .feld { margin-bottom: 18px; }
+  label {
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    margin-bottom: 6px;
+  }
+  label .opt { font-weight: 400; text-transform: none; letter-spacing: 0; color: var(--grau); }
+  input[type="text"], textarea {
+    width: 100%;
+    font-size: 16px; /* verhindert iOS-Zoom */
+    font-family: inherit;
+    color: var(--tinte);
+    background: #fff;
+    border: 2px solid var(--tinte);
+    border-radius: 10px;
+    padding: 12px 12px;
+    outline: none;
+  }
+  input[type="text"]:focus, textarea:focus {
+    box-shadow: 0 0 0 3px rgba(227, 6, 19, .35);
+  }
+  textarea { min-height: 120px; resize: vertical; }
+
+  .zeile { display: flex; gap: 8px; }
+  .zeile input { flex: 1; }
+  .knopf-klein {
+    flex-shrink: 0;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: inherit;
+    background: #fff;
+    color: var(--tinte);
+    border: 2px solid var(--tinte);
+    border-radius: 10px;
+    padding: 0 14px;
+    cursor: pointer;
+  }
+  .knopf-klein:active { background: var(--gelb); }
+
+  /* --- Foto --- */
+  #fotoInput { display: none; }
+  .foto-leer {
+    width: 100%;
+    font-size: 15px;
+    font-weight: 700;
+    font-family: inherit;
+    background: #fff;
+    border: 2px dashed var(--tinte);
+    border-radius: 10px;
+    padding: 14px;
+    cursor: pointer;
+    color: var(--tinte);
+  }
+  .foto-leer:active { background: var(--gelb); }
+  .foto-vorschau {
+    display: none;
+    align-items: center;
+    gap: 12px;
+    border: 2px solid var(--tinte);
+    border-radius: 10px;
+    padding: 8px;
+    background: #fff;
+  }
+  .foto-vorschau img {
+    width: 64px; height: 64px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid var(--tinte);
+  }
+  .foto-vorschau .info { flex: 1; font-size: 13px; color: var(--grau); word-break: break-all; }
+  .foto-vorschau button {
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    background: none;
+    border: 2px solid var(--tinte);
+    border-radius: 8px;
+    padding: 6px 10px;
+    cursor: pointer;
+  }
+
+  /* --- Absenden --- */
+  .senden {
+    width: 100%;
+    font-family: "Anton", Impact, sans-serif;
+    font-size: 24px;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: #fff;
+    background: var(--stempel);
+    border: 3px solid var(--tinte);
+    border-radius: 12px;
+    box-shadow: 4px 4px 0 var(--tinte);
+    padding: 14px;
+    cursor: pointer;
+    margin-top: 4px;
+  }
+  .senden:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--tinte); }
+  .senden:disabled { opacity: .6; transform: none; box-shadow: 4px 4px 0 var(--tinte); cursor: wait; }
+
+  .fehler {
+    display: none;
+    margin-top: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--stempel);
+    text-align: center;
+  }
+
+  .fuss {
+    margin-top: 22px;
+    text-align: center;
+    font-size: 12px;
+    color: rgba(19, 19, 19, .65);
+    line-height: 1.5;
+  }
+
+  /* --- Erfolg: Zugestellt-Stempel --- */
+  .erfolg { display: none; text-align: center; padding: 30px 0 10px; }
+  .erfolg .stempelbox {
+    display: inline-block;
+    font-family: "Anton", Impact, sans-serif;
+    font-size: 34px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--stempel);
+    border: 4px solid var(--stempel);
+    border-radius: 10px;
+    padding: 10px 22px;
+    transform: rotate(-6deg);
+    animation: stempeln .35s cubic-bezier(.2, 2.2, .4, 1) both;
+  }
+  @keyframes stempeln {
+    from { transform: rotate(-6deg) scale(2.2); opacity: 0; }
+    to   { transform: rotate(-6deg) scale(1);   opacity: 1; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .erfolg .stempelbox { animation: none; }
+  }
+  .erfolg p { margin-top: 18px; font-size: 16px; line-height: 1.5; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="sticker">
+    <div class="eyebrow">Du hast den Sticker gescannt</div>
+    <h1>Traust du<br><span class="frage">dich?</span></h1>
+    <div class="sub">Dann schreib mir was. Egal was.<br>Landet direkt auf meinem Handy.</div>
+  </div>
+
+  <div class="karte" id="karte">
+    <div id="formularTeil">
+      <div class="feld">
+        <label for="name">Name <span class="opt">(oder bleib anonym)</span></label>
+        <input type="text" id="name" placeholder="Wie heißt du?" autocomplete="off">
+      </div>
+
+      <div class="feld">
+        <label for="socials">Socials <span class="opt">(optional)</span></label>
+        <input type="text" id="socials" placeholder="@instagram, TikTok, …" autocomplete="off">
+      </div>
+
+      <div class="feld">
+        <label for="standort">Standort <span class="opt">(optional)</span></label>
+        <div class="zeile">
+          <input type="text" id="standort" placeholder="Wo hast du das gescannt?" autocomplete="off">
+          <button type="button" class="knopf-klein" id="ortKnopf">📍 Ort</button>
+        </div>
+      </div>
+
+      <div class="feld">
+        <label for="nachricht">Deine Nachricht</label>
+        <textarea id="nachricht" placeholder="Trau dich …" required></textarea>
+      </div>
+
+      <div class="feld">
+        <label>Foto <span class="opt">(optional)</span></label>
+        <input type="file" id="fotoInput" accept="image/*">
+        <button type="button" class="foto-leer" id="fotoKnopf">📷 Foto anhängen</button>
+        <div class="foto-vorschau" id="fotoVorschau">
+          <img id="fotoBild" alt="Foto-Vorschau">
+          <div class="info" id="fotoInfo"></div>
+          <button type="button" id="fotoEntfernen">✕</button>
+        </div>
+      </div>
+
+      <button type="button" class="senden" id="sendenKnopf">Abschicken</button>
+      <div class="fehler" id="fehler"></div>
+    </div>
+
+    <div class="erfolg" id="erfolg">
+      <div class="stempelbox">Zugestellt</div>
+      <p>Respekt, du hast dich getraut. 🫡<br>Deine Nachricht ist auf meinem Handy gelandet.</p>
+    </div>
+  </div>
+
+  <div class="fuss">
+    Diese Seite speichert nichts.<br>
+    Deine Nachricht geht direkt und nur an den Besitzer des Stickers.
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   KONFIGURATION — HIER ANPASSEN!
+   1. Denk dir einen geheimen, zufälligen Topic-Namen aus
+      (der Topic-Name ist quasi das Passwort!).
+   2. Genau diesen Topic in der ntfy-App abonnieren.
+   ============================================================ */
+const NTFY_SERVER = "https://ntfy.sh";
+const NTFY_TOPIC  = "trau-dich-x7k2q9";
+
+/* ---------- Elemente ---------- */
+const $ = id => document.getElementById(id);
+let fotoDatei = null;
+
+/* ---------- Standort ---------- */
+$("ortKnopf").addEventListener("click", () => {
+  if (!navigator.geolocation) {
+    $("standort").placeholder = "GPS nicht verfügbar";
+    return;
+  }
+  $("ortKnopf").textContent = "…";
+  navigator.geolocation.getCurrentPosition(
+    pos => {
+      const lat = pos.coords.latitude.toFixed(5);
+      const lon = pos.coords.longitude.toFixed(5);
+      $("standort").value = `https://maps.google.com/?q=${lat},${lon}`;
+      $("ortKnopf").textContent = "✓";
+    },
+    () => {
+      $("ortKnopf").textContent = "📍 Ort";
+      $("standort").placeholder = "Standort abgelehnt – tipp ihn einfach ein";
+    },
+    { enableHighAccuracy: false, timeout: 8000 }
+  );
+});
+
+/* ---------- Foto auswählen / entfernen ---------- */
+$("fotoKnopf").addEventListener("click", () => $("fotoInput").click());
+$("fotoInput").addEventListener("change", () => {
+  const f = $("fotoInput").files[0];
+  if (!f) return;
+  fotoDatei = f;
+  $("fotoBild").src = URL.createObjectURL(f);
+  $("fotoInfo").textContent = f.name;
+  $("fotoKnopf").style.display = "none";
+  $("fotoVorschau").style.display = "flex";
+});
+$("fotoEntfernen").addEventListener("click", () => {
+  fotoDatei = null;
+  $("fotoInput").value = "";
+  $("fotoVorschau").style.display = "none";
+  $("fotoKnopf").style.display = "block";
+});
+
+/* ---------- Foto verkleinern (max. 1280 px, JPEG) ----------
+   ntfy.sh erlaubt anonym nur kleine Anhänge, und Handyfotos
+   sind riesig – deshalb wird clientseitig komprimiert.      */
+function fotoKomprimieren(datei) {
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(datei);
+    const img = new Image();
+    img.onload = () => {
+      const maxKante = 1280;
+      let { width: w, height: h } = img;
+      if (Math.max(w, h) > maxKante) {
+        const f = maxKante / Math.max(w, h);
+        w = Math.round(w * f);
+        h = Math.round(h * f);
+      }
+      const c = document.createElement("canvas");
+      c.width = w; c.height = h;
+      c.getContext("2d").drawImage(img, 0, 0, w, h);
+      URL.revokeObjectURL(url);
+      c.toBlob(
+        blob => blob ? resolve(blob) : reject(new Error("Komprimierung fehlgeschlagen")),
+        "image/jpeg", 0.8
+      );
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error("Bild unlesbar")); };
+    img.src = url;
+  });
+}
+
+/* ---------- Absenden ---------- */
+$("sendenKnopf").addEventListener("click", async () => {
+  const nachricht = $("nachricht").value.trim();
+  const fehler = $("fehler");
+  fehler.style.display = "none";
+
+  if (!nachricht) {
+    fehler.textContent = "Ohne Nachricht kein Mut. Schreib was! ✍️";
+    fehler.style.display = "block";
+    return;
+  }
+
+  const knopf = $("sendenKnopf");
+  knopf.disabled = true;
+  knopf.textContent = "Wird geschickt …";
+
+  const name = $("name").value.trim() || "Anonym";
+  const zeilen = [
+    `👤 Name: ${name}`,
+    $("socials").value.trim()  ? `📱 Socials: ${$("socials").value.trim()}`   : null,
+    $("standort").value.trim() ? `📍 Standort: ${$("standort").value.trim()}` : null,
+    ``,
+    `💬 ${nachricht}`
+  ].filter(z => z !== null);
+
+  const url = `${NTFY_SERVER}/${NTFY_TOPIC}`;
+
+  try {
+    /* 1) Textnachricht */
+    const res = await fetch(url, {
+      method: "POST",
+      body: zeilen.join("\n"),
+      headers: {
+        "X-Title": "Jemand hat sich getraut!",
+        "X-Tags": "envelope_with_arrow",
+        "X-Priority": "4"
+      }
+    });
+    if (!res.ok) throw new Error("ntfy: " + res.status);
+
+    /* 2) Foto als zweite Benachrichtigung mit Anhang */
+    if (fotoDatei) {
+      knopf.textContent = "Foto wird geschickt …";
+      const blob = await fotoKomprimieren(fotoDatei);
+      const res2 = await fetch(url, {
+        method: "PUT",
+        body: blob,
+        headers: {
+          "X-Filename": "foto.jpg",
+          "X-Title": "Foto zur Nachricht",
+          "X-Tags": "camera_with_flash"
+        }
+      });
+      if (!res2.ok) throw new Error("Foto: " + res2.status);
+    }
+
+    $("formularTeil").style.display = "none";
+    $("erfolg").style.display = "block";
+    window.scrollTo({ top: 0 });
+
+  } catch (e) {
+    knopf.disabled = false;
+    knopf.textContent = "Abschicken";
+    fehler.textContent = "Senden hat nicht geklappt (" + e.message + "). Nochmal versuchen?";
+    fehler.style.display = "block";
+  }
+});
+</script>
+</body>
+</html>
